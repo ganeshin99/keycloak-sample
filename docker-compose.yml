@@ -1,0 +1,39 @@
+version: '3.9'
+networks:
+  keycloak-net:
+volumes:
+  keycloak-datastore:
+
+services:
+  keycloak-db:
+    image: postgres:14-alpine
+    volumes:
+      - keycloak-datastore:/var/lib/postgresql/data
+    networks:
+      - keycloak-net
+    ports:
+      - "25432:5432"
+    environment:  
+      POSTGRES_DB:       
+      POSTGRES_USER:     
+      POSTGRES_PASSWORD: 
+  keycloak:
+    image: quay.io/keycloak/keycloak:17.0.0
+    depends_on:
+      - keycloak-db
+    command: start-dev
+    networks:
+      - keycloak-net
+    ports:
+      - "8180:8080"
+    environment: 
+      DB_VENDOR:   POSTGRES
+      DB_ADDR:     
+      DB_PORT:     5432
+      DB_DATABASE: 
+      DB_USER:     
+      DB_PASSWORD: 
+      KEYCLOAK_ADMIN:   
+      KEYCLOAK_ADMIN_PASSWORD:         
+  
+
